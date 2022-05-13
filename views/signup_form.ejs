@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%=title %></title>
+  </head>
+  <body>
+    <div class="full-container">
+      <h1 class="signup-h1"><%=title %></h1>
+      <form action="" method="POST">
+        <div class="sign-up-container">
+          <label name="username">username:</label>
+          <input placeholder="username" type="text" name="username" required />
+
+          <label name="password">password:</label>
+          <input
+            placeholder="password"
+            name="password"
+            type="password"
+            required
+          />
+
+          <label name="password2">Confirm Password:</label>
+          <input placeholder='confirm password' type="password" name="password2"
+          required" />
+
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+    </div>
+    <%if(errors.length>0){%>
+    <ul
+      style="
+        background: white;
+        border-radius: 1.5rem;
+        padding: 10px 15px;
+        list-style: none;
+        font-weight: bolder;
+      "
+    >
+      <% errors.forEach(err =>{ %>
+      <li style="color: red"><%=err.msg%></li>
+      <%})%>
+    </ul>
+    <%} %>
+  </body>
+</html>
