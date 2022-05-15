@@ -74,11 +74,6 @@ res.locals.currentUser = req.user;
 
 app.use('/', indexRouter);
 
-app.post('/login',passport.authenticate('local', {
-  successRedirect : '/home',
-  failureRedirect: '/login'
-}))
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
