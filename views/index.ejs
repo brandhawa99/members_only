@@ -4,10 +4,22 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
+  <div class="links">
+    <a href="/sign-up"> Sign Up</a>
+    <% if(!user){ %>
+    <a href="/login">Log In</a>
+    <% } %>
+
+    <a href="/logout">Log Out</a>
+  </div>
   <body>
     <h1><%= title %></h1>
-    <a href="/sign-up"> Sign Up</a>
-    <a href="/login">Log In</a>
     <p>Welcome to <%= title %></p>
+    <% if(user){ %>
+    <h1>WELCOME BACK <%= user.username%></h1>
+    <% } else { %>
+    <a href="/login">Log In</a>
+
+    <% } %>
   </body>
 </html>
