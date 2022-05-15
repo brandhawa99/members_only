@@ -14,12 +14,10 @@ router.get('/sign-up',user_controller.user_signup_get)
 
 router.post('/sign-up',user_controller.user_signup_post)
 
-router.get('/login', user_controller.user_login_get);
+router.post('/log-in',user_controller.user_login_post)
 
-router.post('/login',
-passport.authenticate('local',{
-  failureRedirect: '/login', failureMessage:'something went wrong'
-}),user_controller.user_login_post);
+router.get('/log-in',user_controller.user_login_get)
+
 
 router.get('/logout',user_controller.user_logout_get)
 
