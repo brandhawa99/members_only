@@ -1,6 +1,7 @@
 const{body, validationResult, check} = require('express-validator')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 
 
@@ -49,20 +50,20 @@ exports.user_signup_post = [
           if(err){return next(err)}
         })
         if(err){return next(err)}
-        res.redirect('/login');
+        res.redirect('/log-in');
       })
     }
   }
 ]
 
 exports.user_login_get = function(req,res,next){
-  res.render('login_form', {title:'Login', errors:[]})
+  res.render('login_form',{title:'Log In', errors:[]})
 }
 
-exports.user_login_post = function(req,res,next){
-  console.log("we reached here")
-  res.redirect('/home');
-}
+exports.user_login_post = passport.authenticate('local',{
+  successRedirect: '/home',
+  failureRedirect: '/log-in'
+})
 
 exports.user_logout_get = function (req,res,next){
   req.logout()
