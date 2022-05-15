@@ -4,11 +4,15 @@ require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
-let passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
 const User = require('./models/user')
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy
+const bcrypt = require('bcryptjs')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser');
 
+//import index routes
 var indexRouter = require('./routes/index');
 
 const mongodb = process.env.MONGO_URI
@@ -22,53 +26,42 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    User.findOne({ username: username }, (err, user) => {
-      'looking for user'
-      if (err) { 
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false, { message: "Incorrect username" });
-      }
-      console.log(user, "this is the user");
-      bcrypt.compare(password, user.password, (err, res) => {
-        if (res) {
-          // passwords match! log user in
-          return done(null, user)
-        } else {
-          // passwords do not match!
-          return done(null, false, { message: "Incorrect password" })
-        }
-      })
-      return done(null, user);
-    });
-  })
-);
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: true }) );
+
+passport.use(new LocalStrategy((username, password, done) => {
+  User.findOne({ username: username }, (err, user) => {
+    if (err) return done(err);
+    if (!user) return done(null, false, { message: "Incorrect username" });
+    bcrypt.compare(password, user.password, (err, res) => {
+      if (err) return done(err);
+      // Passwords match, log user in!
+      if (res) return done(null, user);
+      // Passwords do not match!
+      else return done(null, false, { message: "Incorrect password" });
+    });
+  });
+}));
+  
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => User.findById(id, (err, user) => done(err, user)));
+
+  
 app.use(session({ secret: 'dog', resave: false, saveUninitialized: true }));
-app.use(passport.session());
 app.use(passport.initialize());
+app.use(passport.session())
 app.use(express.urlencoded({ extended: false }));
 
-app.use(function(req,res,next){
-res.locals.currentUser = req.user;
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
   next();
-})
+});
 
 
 
