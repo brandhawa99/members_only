@@ -2,8 +2,10 @@ const{body, validationResult, check} = require('express-validator')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs');
 
+
+
 exports.index = function(req,res){
-  res.render('index',{title:'Members Only'})
+  res.render('index',{title:'Members Only', user:req.user})
 }
 
 exports.user_signup_get = function(req,res){
@@ -11,13 +13,11 @@ exports.user_signup_get = function(req,res){
 }
 
 exports.user_signup_post = [
-  body('username').trim().escape().isLength({min:1}).withMessage("Username is required")
-    .isAlphanumeric().withMessage("Must only be alphanumeric"),
+  body('username').trim().escape().isLength({min:1}).withMessage("Username is required"),
   body('password').trim().escape().isLength({errorMessage:"password must be 4 characters long", min:4}),
   body('password2').trim().escape(),
   check('password2','passwords do not match')
     .custom((val,{req})=>{
-      console.log("val ",val, " password ", req.body.password)
       if(val === req.body.password){
         return true;
       }else{
@@ -25,14 +25,11 @@ exports.user_signup_post = [
       }
     }),
   check('username','username already exists')
-    .custom((val)=>{
-      User.findOne({'username':val},function(err,name){
-        if(err){return next(err)}
-        console.log(name, " THIS IS THE VALUE OF NAME");
-        if(name == null){
-          return true;
+    .custom(async(val)=>{
+      return User.findOne({'username':val}).then(user =>{
+        if(user !== null){
+          return Promise.reject("username already in use")
         }
-        return false;
       })
     }),
 
@@ -52,7 +49,7 @@ exports.user_signup_post = [
           if(err){return next(err)}
         })
         if(err){return next(err)}
-        res.redirect('/');
+        res.redirect('/login');
       })
     }
   }
@@ -60,4 +57,14 @@ exports.user_signup_post = [
 
 exports.user_login_get = function(req,res,next){
   res.render('login_form', {title:'Login', errors:[]})
+}
+
+exports.user_login_post = function(req,res,next){
+  console.log("we reached here")
+  res.redirect('/home');
+}
+
+exports.user_logout_get = function (req,res,next){
+  req.logout()
+  res.redirect('/home')
 }
