@@ -5,23 +5,39 @@
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <div class="links">
-    <a href="/sign-up"> Sign Up</a>
     <% if(user){ %>
-    <a href="/">Post Something</a>
+    <a href="/create-message">Post Something</a>
+    <a href="/logout">Log Out</a>
     <% } %> <% if(!user){ %>
+    <a href="/sign-up"> Sign Up</a>
     <a href="/log-in">Log In</a>
     <% } %>
-
-    <a href="/logout">Log Out</a>
   </div>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
     <% if(user){ %>
     <h1>WELCOME BACK <%= user.username%></h1>
     <% } else { %>
-    <a href="/log-in">Log In</a>
-
+    <p>Welcome to <%= title %></p>
     <% } %>
+    <div class="message-container">
+      <% if(messages.length > 0){ %> <%messages.forEach(msg =>{ %>
+      <div class="message">
+        <h3><%= msg.title%></h3>
+        <p><%= msg.message %></p>
+        <div class="data">
+          <%if(user){ %>
+          <div><%=msg.user.username %></div>
+          <div><%=msg.date%></div>
+          <%}%> <%if(user&&user.admin) { %>
+          <a href="/delete/<%=msg._id%>">delete</a>
+          <%}%>
+        </div>
+      </div>
+
+      <%})%> <%}else{ %>
+      <h1>need to do</h1>
+      <%}%>
+    </div>
   </body>
 </html>
