@@ -2,11 +2,17 @@ const{body, validationResult, check} = require('express-validator')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-
+const Message = require('../models/message')
 
 
 exports.index = function(req,res){
-  res.render('index',{title:'Members Only', user:req.user})
+  Message.find()
+  .sort({timestamp:-1})
+  .populate('user')
+  .exec(function(err,messages){
+    if(err){return next(err)}
+    res.render('index',{title:'Members Only', user:req.user,messages:messages})
+  })
 }
 
 exports.user_signup_get = function(req,res){
@@ -68,4 +74,31 @@ exports.user_login_post = passport.authenticate('local',{
 exports.user_logout_get = function (req,res,next){
   req.logout()
   res.redirect('/home')
+}
+
+exports.user_delete_msg_get = function(req,res,next){
+  Message.findById(req.params.id)
+    .exec(function(err,msg){
+      if(err){return next(err)}
+      res.render('delete_msg', {msg:msg})
+    })
+}
+
+exports.user_delete_msg_post = function (req,res,next){
+  Message.findByIdAndDelete(req.body.msgid)
+    .exec(function(err,results){
+      if(err){return next(err)}
+      res.redirect('/home');
+    })
+
+}
+
+exports.user_make_admin_get = function(req,res,next){
+  res.send('need to implement')
+
+}
+
+exports.user_make_admin_post = function(req,res,next){
+  res.send('need to implement')
+
 }
