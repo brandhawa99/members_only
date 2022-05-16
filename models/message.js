@@ -14,7 +14,7 @@ var MessageSchema = new Schema({
 MessageSchema
 .virtual('date')
 .get(function(){
-  let date = DateTime.fromJSDate(this.timestamp).toLocaleString(DateTime.DATE_MED);
+  let date = DateTime.fromJSDate(this.timestamp).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
   return date;
 })
 
