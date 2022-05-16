@@ -79,3 +79,39 @@ a:hover{
   padding-bottom: 3px;
   margin-right: 70px;
 }
+
+.message-container{
+  display: flex;
+  flex-direction: column;
+  gap:25px;
+}
+.message{
+  background-color: white;
+  width: 35rem;
+  padding: 10px 30px;
+  border-radius: 1.4rem;
+
+}
+.message h3{
+  border-bottom: solid .5px black;
+  
+}
+.message p{
+  border-left: #354f52 solid 3px;
+  padding: 6px 6px;
+
+}
+.data{
+  padding-top: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: .7rem;
+  gap: 20px;
+  border-top: 1px dashed rgb(212, 212, 212)
+}
+.data a{
+  background-color: red;
+  color:white;
+}
