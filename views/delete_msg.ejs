@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete</title>
+  </head>
+  <body>
+    <h1>Are you sure you want to delete this message</h1>
+    <h3><%=msg.title%></h3>
+    <p><%=msg.message%></p>
+    <form action="" method="post">
+      <input type="hidden" name="msgid" value="<%=msg._id%>" />
+      <button type="submit">Delete</button>
+    </form>
+  </body>
+</html>
